@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Load Architect</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div id="intro-screen" class="screen">
+        <div class="intro-content">
+            <h1>Cognitive Load Architect</h1>
+            <p class="subtitle">Optimaliseer digitale leeromgevingen door cognitieve belasting bewust te sturen</p>
+            <div class="intro-explanation">
+                <p>Je ziet straks een rommelige digitale lespagina. Als onderwijsontwerper ga je deze optimaliseren door:</p>
+                <ul>
+                    <li><strong class="extraneous-color">Extraneous Load</strong> te verminderen: verwijder ruis en afleiding</li>
+                    <li><strong class="intrinsic-color">Intrinsic Load</strong> te managen: structureer complexiteit</li>
+                    <li><strong class="germane-color">Germane Load</strong> te activeren: stimuleer actieve verwerking</li>
+                </ul>
+                <p>Doel: vind de optimale balans voor effectief leren.</p>
+            </div>
+            <button id="start-game-btn" class="btn btn-primary">Start het spel</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-header">
+            <h2>Cognitive Load Architect</h2>
+            <div class="header-actions">
+                <div class="round-info"><span id="current-round">0 / 14 interventies</span></div>
+                <button id="view-result-btn" class="btn btn-secondary">Bekijk Resultaat</button>
+            </div>
+        </div>
+
+        <div class="game-container">
+            <!-- Left Panel: Lesson Page -->
+            <div class="lesson-panel">
+                <h3>Digitale Lespagina</h3>
+                <div id="lesson-page" class="lesson-page">
+                    <!-- Dynamically filled with lesson elements -->
+                </div>
+            </div>
+
+            <!-- Right Panel: Cards and Flow -->
+            <div class="control-panel">
+                <h3>Interventies</h3>
+
+                <!-- Intervention Cards -->
+                <div class="cards-container">
+                    <!-- Extraneous Card -->
+                    <div class="card extraneous-card">
+                        <div class="card-header">
+                            <h4>Verwijder Ruis</h4>
+                            <span class="card-label">Extraneous Load</span>
+                        </div>
+                        <div class="card-body" id="extraneous-actions">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Intrinsic Card -->
+                    <div class="card intrinsic-card">
+                        <div class="card-header">
+                            <h4>Structureer Complexiteit</h4>
+                            <span class="card-label">Intrinsic Load</span>
+                        </div>
+                        <div class="card-body" id="intrinsic-actions">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Germane Card -->
+                    <div class="card germane-card">
+                        <div class="card-header">
+                            <h4>Activeer Verwerking</h4>
+                            <span class="card-label">Germane Load</span>
+                        </div>
+                        <div class="card-body" id="germane-actions">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow Meter -->
+                <div class="flow-meter-container">
+                    <h4>Cognitieve Balans</h4>
+                    <div class="flow-meter">
+                        <div class="flow-zones">
+                            <span class="zone-label left">Onderload</span>
+                            <span class="zone-label center">Optimaal</span>
+                            <span class="zone-label right">Overload</span>
+                        </div>
+                        <div class="flow-bar">
+                            <div class="flow-zone underload"></div>
+                            <div class="flow-zone optimal"></div>
+                            <div class="flow-zone overload"></div>
+                            <div class="flow-needle" id="flow-needle"></div>
+                        </div>
+                    </div>
+                    <div class="load-scores">
+                        <div class="score extraneous-score">
+                            <span class="score-label">Extraneous:</span>
+                            <span id="extraneous-score">15</span>/20
+                        </div>
+                        <div class="score intrinsic-score">
+                            <span class="score-label">Intrinsic:</span>
+                            <span id="intrinsic-score">10</span>/20
+                        </div>
+                        <div class="score germane-score">
+                            <span class="score-label">Germane:</span>
+                            <span id="germane-score">3</span>/20
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="feedback-title">Interventie Effect</h3>
+            <div id="feedback-text"></div>
+            <div class="feedback-changes">
+                <div id="score-changes"></div>
+            </div>
+            <button id="feedback-continue-btn" class="btn btn-primary">Volgende</button>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen hidden">
+        <div class="end-content">
+            <h1>Resultaat</h1>
+            <div id="end-message" class="end-message"></div>
+            <div class="final-scores">
+                <h3>Finale Scores</h3>
+                <div class="score-item">
+                    <span>Extraneous Load:</span>
+                    <span id="final-extraneous">0</span>/20
+                </div>
+                <div class="score-item">
+                    <span>Intrinsic Load:</span>
+                    <span id="final-intrinsic">0</span>/20
+                </div>
+                <div class="score-item">
+                    <span>Germane Load:</span>
+                    <span id="final-germane">0</span>/20
+                </div>
+            </div>
+            <div class="interventions-summary">
+                <h3>Jouw Interventies</h3>
+                <ul id="interventions-list"></ul>
+            </div>
+            <div class="reflection">
+                <h3>Didactische Reflectie</h3>
+                <p id="reflection-text"></p>
+            </div>
+            <div class="end-actions">
+                <a href="vergelijking.html" class="btn btn-primary">Bekijk Voor/Na Vergelijking</a>
+                <button id="restart-btn" class="btn btn-secondary" style="margin-left: 10px;">Opnieuw Spelen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/lessonpage.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
