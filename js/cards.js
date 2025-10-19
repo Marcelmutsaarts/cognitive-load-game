@@ -22,7 +22,7 @@ function getInterventions() {
             id: 'int-ext-2',
             cardType: 'extraneous',
             label: 'Verwijder notificatie popup',
-            targetElementId: 'element-3',
+            targetElementId: 'element-4',
             action: 'remove',
             feedbackText: 'Door de popup te verwijderen elimineer je een storende onderbreking. Lerenden kunnen zich nu beter concentreren op de leerstof zonder mentale resources te verspillen aan irrelevante beslissingen.',
             effect: {
@@ -34,20 +34,6 @@ function getInterventions() {
         },
         {
             id: 'int-ext-3',
-            cardType: 'extraneous',
-            label: 'Stop draaiende animatie',
-            targetElementId: 'element-4',
-            action: 'remove',
-            feedbackText: 'De draaiende animatie is nu verwijderd. Bewegende elementen trekken onwillekeurig aandacht en verhogen cognitieve belasting. Door deze ruis te verwijderen help je lerenden gefocust te blijven.',
-            effect: {
-                extraneous: -2,
-                intrinsic: 0,
-                germane: 0
-            },
-            used: false
-        },
-        {
-            id: 'int-ext-4',
             cardType: 'extraneous',
             label: 'Verwijder decoratieve afbeelding',
             targetElementId: 'element-7',
@@ -61,24 +47,41 @@ function getInterventions() {
             used: false
         },
         {
-            id: 'int-ext-5',
+            id: 'int-ext-4',
             cardType: 'extraneous',
             label: 'Vereenvoudig navigatiemenu',
-            targetElementId: 'element-6',
+            targetElementId: 'element-5',
             action: 'modify',
             newContent: `
-                <strong>Menu</strong>
-                <ul>
-                    <li>Cursusinhoud</li>
-                    <li>Opdrachten</li>
-                    <li>Profiel</li>
-                    <li>Help</li>
-                </ul>
+                <div class="menu-simplified">
+                    <strong>Menu</strong>
+                    <ul>
+                        <li>Cursusinhoud</li>
+                        <li>Opdrachten</li>
+                        <li>Profiel</li>
+                        <li>Help</li>
+                    </ul>
+                </div>
             `,
             feedbackText: 'Het overweldigende menu met 15 opties is versimpeld naar 4 essentiële items. Dit vermindert keuze-overload en cognitieve belasting bij navigatie, waardoor mentale resources beschikbaar blijven voor leren.',
             effect: {
                 extraneous: -3,
                 intrinsic: 0,
+                germane: 0
+            },
+            used: false
+        },
+        {
+            id: 'int-ext-mislead-1',
+            cardType: 'extraneous',
+            label: 'Verwijder alle tekst, alleen visuals',
+            targetElementId: null,
+            action: 'custom',
+            isMisleading: true,
+            feedbackText: '⚠️ Oppassen! Door ALLE tekst te verwijderen maak je de content ontoegankelijk. Visuele elementen alleen zijn vaak niet voldoende voor begrip. Je hebt extraneous load verlaagd, maar intrinsic load verhoogd omdat lerenden nu moeten "raden" wat de visuele content betekent.',
+            effect: {
+                extraneous: -3,
+                intrinsic: +4,
                 germane: 0
             },
             used: false
@@ -117,7 +120,7 @@ function getInterventions() {
             id: 'int-int-2',
             cardType: 'intrinsic',
             label: 'Structureer Scrum uitleg met visual',
-            targetElementId: 'element-5',
+            targetElementId: 'element-3',
             action: 'modify',
             newContent: `
                 <h4>Scrum Framework</h4>
@@ -163,7 +166,7 @@ function getInterventions() {
             id: 'int-int-4',
             cardType: 'intrinsic',
             label: 'Splits risicomanagement in stappen',
-            targetElementId: 'element-8',
+            targetElementId: 'element-6',
             action: 'modify',
             newContent: `
                 <h4>Risicomanagement - 4 Stappen</h4>
@@ -176,6 +179,21 @@ function getInterventions() {
             effect: {
                 extraneous: 0,
                 intrinsic: -2,
+                germane: 0
+            },
+            used: false
+        },
+        {
+            id: 'int-int-mislead-1',
+            cardType: 'intrinsic',
+            label: 'Splits tekst in zeer korte zinnetjes',
+            targetElementId: 'element-2',
+            action: 'custom',
+            isMisleading: true,
+            feedbackText: '⚠️ Te veel fragmentatie! Door elk stukje informatie op te knippen in losse zinnetjes verlies je samenhang. Dit creëert juist MEER cognitieve belasting omdat lerenden de losse stukjes weer zelf moeten samenstellen. Chunking is goed, maar overdrijven leidt tot verwarring.',
+            effect: {
+                extraneous: +3,
+                intrinsic: -1,
                 germane: 0
             },
             used: false
@@ -205,7 +223,7 @@ function getInterventions() {
             id: 'int-ger-2',
             cardType: 'germane',
             label: 'Voeg oefenvraag toe bij Scrum',
-            targetElementId: 'element-5',
+            targetElementId: 'element-3',
             action: 'enhance',
             newContent: `
                 <div style="background: #D5F4E6; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #27AE60;">
@@ -224,7 +242,7 @@ function getInterventions() {
             id: 'int-ger-3',
             cardType: 'germane',
             label: 'Voeg voorspelling toe aan risicomanagement',
-            targetElementId: 'element-8',
+            targetElementId: 'element-6',
             action: 'enhance',
             newContent: `
                 <div style="background: #D5F4E6; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #27AE60;">
@@ -243,7 +261,7 @@ function getInterventions() {
             id: 'int-ger-4',
             cardType: 'germane',
             label: 'Voeg concrete toepassing toe',
-            targetElementId: 'element-8',
+            targetElementId: 'element-6',
             action: 'enhance',
             newContent: `
                 <div style="background: #D5F4E6; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #27AE60;">
@@ -262,7 +280,7 @@ function getInterventions() {
             id: 'int-ger-5',
             cardType: 'germane',
             label: 'Voeg self-explanation prompt toe',
-            targetElementId: 'element-5',
+            targetElementId: 'element-3',
             action: 'enhance',
             newContent: `
                 <div style="background: #D5F4E6; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #27AE60;">
@@ -274,6 +292,21 @@ function getInterventions() {
                 extraneous: 0,
                 intrinsic: 0,
                 germane: 3
+            },
+            used: false
+        },
+        {
+            id: 'int-ger-mislead-1',
+            cardType: 'germane',
+            label: 'Voeg veel complexe case studies toe',
+            targetElementId: null,
+            action: 'custom',
+            isMisleading: true,
+            feedbackText: '⚠️ Te veel tegelijk! Complexe case studies zijn waardevol voor germane load, maar te veel ervan tegelijk creëert cognitive overload. Lerenden raken overweldigd en kunnen de informatie niet meer goed verwerken. Dosering en timing zijn essentieel.',
+            effect: {
+                extraneous: 0,
+                intrinsic: +4,
+                germane: +2
             },
             used: false
         }

@@ -1,6 +1,7 @@
 // ===== GAME STATE =====
 const gameState = {
     interventionCount: 0,
+    interventionBudget: 10, // NEW: Maximum interventies
     loadScores: {
         extraneous: 15,
         intrinsic: 10,
@@ -8,7 +9,9 @@ const gameState = {
     },
     interventionsUsed: [],
     lessonElements: [],
-    availableInterventions: []
+    availableInterventions: [],
+    activeCardType: 'extraneous', // Track active tab
+    mistakeCount: 0 // NEW: Track misleading choices
 };
 
 // ===== INITIALIZATION =====
@@ -33,6 +36,41 @@ function attachEventListeners() {
     document.getElementById('feedback-continue-btn').addEventListener('click', continueGame);
     document.getElementById('restart-btn').addEventListener('click', restartGame);
     document.getElementById('view-result-btn').addEventListener('click', endGame);
+
+    // Tab listeners
+    initializeTabs();
+}
+
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const cardType = e.currentTarget.dataset.cardType;
+            setActiveTab(cardType);
+        });
+    });
+}
+
+function setActiveTab(cardType) {
+    gameState.activeCardType = cardType;
+
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const activeTabBtn = document.querySelector(`.tab-btn[data-card-type="${cardType}"]`);
+    if (activeTabBtn) {
+        activeTabBtn.classList.add('active');
+    }
+
+    // Update visible cards
+    document.querySelectorAll('.card').forEach(card => {
+        card.classList.remove('active');
+    });
+    const activeCard = document.querySelector(`.${cardType}-card`);
+    if (activeCard) {
+        activeCard.classList.add('active');
+    }
 }
 
 // ===== SCREEN MANAGEMENT =====
@@ -46,15 +84,19 @@ function showScreen(screenId) {
 function startGame() {
     // Reset game state
     gameState.interventionCount = 0;
+    gameState.interventionBudget = 10;
+    gameState.mistakeCount = 0;
     gameState.loadScores = { extraneous: 15, intrinsic: 10, germane: 3 };
     gameState.interventionsUsed = [];
     gameState.lessonElements = getLessonElements();
     gameState.availableInterventions = getInterventions();
+    gameState.activeCardType = 'extraneous';
 
     // Render game screen
     showScreen('game-screen');
     renderLessonPage();
     renderCards();
+    setActiveTab('extraneous'); // Set initial tab
     updateFlowMeter();
     updateScores();
     updateInterventionCount();
@@ -122,10 +164,15 @@ function renderCard(containerId, interventions) {
     interventions.forEach(intervention => {
         const button = document.createElement('button');
         button.className = 'action-btn';
-        button.textContent = intervention.label;
-        button.disabled = intervention.used;
 
-        if (!intervention.used) {
+        // No visual hints - all interventions look the same
+        button.textContent = intervention.label;
+
+        // Disable if used OR if budget exhausted
+        const budgetExhausted = gameState.interventionCount >= gameState.interventionBudget;
+        button.disabled = intervention.used || budgetExhausted;
+
+        if (!intervention.used && !budgetExhausted) {
             button.addEventListener('click', () => executeIntervention(intervention.id));
         }
 
@@ -140,9 +187,19 @@ function updateScores() {
 }
 
 function updateInterventionCount() {
-    const totalInterventions = gameState.availableInterventions.length;
-    const usedInterventions = gameState.availableInterventions.filter(i => i.used).length;
-    document.getElementById('current-round').textContent = `${usedInterventions} / ${totalInterventions} interventies`;
+    const remaining = gameState.interventionBudget - gameState.interventionCount;
+    const budgetText = `${remaining} interventies over`;
+    document.getElementById('current-round').textContent = budgetText;
+
+    // Change color if budget is low
+    const roundInfo = document.querySelector('.round-info');
+    if (remaining <= 2) {
+        roundInfo.style.color = '#E74C3C'; // Red warning
+    } else if (remaining <= 4) {
+        roundInfo.style.color = '#F39C12'; // Orange caution
+    } else {
+        roundInfo.style.color = '#2C3E50'; // Default
+    }
 }
 
 function updateFlowMeter() {
@@ -205,10 +262,17 @@ function executeIntervention(interventionId) {
 
     // Record intervention
     gameState.interventionCount++;
+
+    // Track if misleading choice
+    if (intervention.isMisleading) {
+        gameState.mistakeCount++;
+    }
+
     gameState.interventionsUsed.push({
         number: gameState.interventionCount,
         label: intervention.label,
-        feedback: intervention.feedbackText
+        feedback: intervention.feedbackText,
+        isMisleading: intervention.isMisleading || false
     });
 
     // Update UI
@@ -256,16 +320,36 @@ function renderEndScreen() {
     interventionsList.innerHTML = '';
     gameState.interventionsUsed.forEach(intervention => {
         const li = document.createElement('li');
-        li.textContent = `${intervention.number}. ${intervention.label}`;
+        if (intervention.isMisleading) {
+            li.innerHTML = `${intervention.number}. ${intervention.label} <span style="color: #E67E22; font-weight: bold;">⚠️ Misleidend</span>`;
+            li.style.color = '#E67E22';
+        } else {
+            li.textContent = `${intervention.number}. ${intervention.label}`;
+        }
         interventionsList.appendChild(li);
     });
 
-    // Reflection
+    // Reflection with strategy evaluation
     const reflectionText = document.getElementById('reflection-text');
-    if (isOptimal) {
-        reflectionText.textContent = 'Je demonstreert een sterk begrip van Cognitive Load Theory. Door systematisch extraneous load te verminderen, intrinsic load te structureren en germane load te activeren, creëer je een leeromgeving waarin lerenden hun beperkte werkgeheugen optimaal kunnen inzetten voor betekenisvol leren.';
+    const usedCount = gameState.interventionCount;
+    const budgetCount = gameState.interventionBudget;
+    const mistakeCount = gameState.mistakeCount;
+
+    let strategyScore = '';
+    if (mistakeCount === 0 && isOptimal) {
+        strategyScore = '🏆 Meesterlijk! Je hebt perfect gescoord zonder misleidende keuzes. ';
+    } else if (mistakeCount === 0 && !isOptimal) {
+        strategyScore = '👍 Goede strategie! Je hebt geen misleidende keuzes gemaakt. ';
+    } else if (mistakeCount === 1) {
+        strategyScore = '💡 Leerervaring! Je hebt 1 misleidende keuze gemaakt. ';
     } else {
-        reflectionText.textContent = 'Cognitive Load Theory vraagt om een delicate balans: verwijder afleiding (extraneous), maak complexiteit behapbaar (intrinsic), en stimuleer actief denken (germane). Blijf experimenteren met deze drie dimensies om de optimale leeromgeving te vinden voor jouw context en doelgroep.';
+        strategyScore = `⚠️ Let op: Je hebt ${mistakeCount} misleidende keuzes gemaakt. `;
+    }
+
+    if (isOptimal) {
+        reflectionText.textContent = strategyScore + 'Je demonstreert een sterk begrip van Cognitive Load Theory. Door systematisch extraneous load te verminderen, intrinsic load te structureren en germane load te activeren, creëer je een leeromgeving waarin lerenden hun beperkte werkgeheugen optimaal kunnen inzetten voor betekenisvol leren.';
+    } else {
+        reflectionText.textContent = strategyScore + 'Cognitive Load Theory vraagt om een delicate balans: verwijder afleiding (extraneous), maak complexiteit behapbaar (intrinsic), en stimuleer actief denken (germane). Blijf experimenteren met deze drie dimensies om de optimale leeromgeving te vinden voor jouw context en doelgroep.';
     }
 }
 

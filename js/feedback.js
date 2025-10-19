@@ -62,9 +62,14 @@ function getFlowStatusMessage() {
         return '⚠️ Let op: De totale cognitieve belasting is nog hoog (overload zone). Overweeg meer ruis te verwijderen of complexiteit te structureren.';
     }
 
-    // Underload
+    // Underload - NEW: Enhanced warning
     if (flowBalance < -5) {
         return '⚠️ Let op: De cognitieve belasting wordt misschien te laag (onderload zone). Zorg dat er voldoende uitdaging en actieve verwerking blijft.';
+    }
+
+    // NEW: Too empty warning
+    if (extraneous < 3 && germane < 5) {
+        return '⚠️ Oppassen! De pagina wordt té kaal. Lerenden hebben te weinig prikkels. Balans is belangrijker dan alles verwijderen.';
     }
 
     // Low germane
@@ -80,6 +85,15 @@ function getFlowStatusMessage() {
     // Moving in right direction
     if (flowBalance > 5 && flowBalance <= 10) {
         return '👍 Je bent op de goede weg! De balans verbetert, blijf doorwerken aan optimalisatie.';
+    }
+
+    // Budget warning
+    const remaining = gameState.interventionBudget - gameState.interventionCount;
+    if (remaining === 2) {
+        return '⏰ Let op: Je hebt nog maar 2 interventies over. Kies strategisch!';
+    }
+    if (remaining === 1) {
+        return '⏰ Laatste interventie! Maak het tellen.';
     }
 
     return null;

@@ -25,24 +25,6 @@ function getLessonElements() {
         },
         {
             id: 'element-3',
-            type: 'popup',
-            cognitiveLoadType: 'extraneous',
-            content: 'Wil je notificaties ontvangen voor nieuwe content? Klik JA om op de hoogte te blijven!',
-            removed: false,
-            modified: false,
-            enhanced: false
-        },
-        {
-            id: 'element-4',
-            type: 'animation',
-            cognitiveLoadType: 'extraneous',
-            content: '✨ LOADING... ✨',
-            removed: false,
-            modified: false,
-            enhanced: false
-        },
-        {
-            id: 'element-5',
             type: 'text-complex',
             cognitiveLoadType: 'intrinsic',
             content: `
@@ -53,7 +35,16 @@ function getLessonElements() {
             enhanced: false
         },
         {
-            id: 'element-6',
+            id: 'element-4',
+            type: 'popup',
+            cognitiveLoadType: 'extraneous',
+            content: 'Wil je notificaties ontvangen voor nieuwe content? Klik JA om op de hoogte te blijven!',
+            removed: false,
+            modified: false,
+            enhanced: false
+        },
+        {
+            id: 'element-5',
             type: 'navigation',
             cognitiveLoadType: 'extraneous',
             content: `
@@ -80,21 +71,21 @@ function getLessonElements() {
             enhanced: false
         },
         {
-            id: 'element-7',
-            type: 'image-decorative',
-            cognitiveLoadType: 'extraneous',
-            content: '[Decoratieve afbeelding: Abstract patroon zonder relatie tot de lesstof]',
-            removed: false,
-            modified: false,
-            enhanced: false
-        },
-        {
-            id: 'element-8',
+            id: 'element-6',
             type: 'text-complex',
             cognitiveLoadType: 'intrinsic',
             content: `
                 <p><strong>Risicomanagement:</strong> Identificeer potentiële risico's, analyseer de kans en impact, ontwikkel mitigatiestrategieën en monitor risico's gedurende het project. Gebruik tools zoals een risicoregister en houd rekening met zowel interne als externe risicofactoren.</p>
             `,
+            removed: false,
+            modified: false,
+            enhanced: false
+        },
+        {
+            id: 'element-7',
+            type: 'image-decorative',
+            cognitiveLoadType: 'extraneous',
+            content: '[Decoratieve afbeelding: Abstract patroon zonder relatie tot de lesstof]',
             removed: false,
             modified: false,
             enhanced: false
